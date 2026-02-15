@@ -20,6 +20,8 @@
           transparent) calc((var(--x) * 1px) - (var(--size) * 0.5)) calc((var(--y) * 1px) - (var(--size) * 0.5)) / var(--size) var(--size) no-repeat fixed;
       --text-dim: #888;
       --radius: 1.2rem;
+      /* Warna Merah Metalik */
+      --metallic-red: linear-gradient(145deg, #ff0000, #8b0000, #ff4d4d, #4b0000);
     }
 
     * {
@@ -36,7 +38,6 @@
       overflow-x: hidden;
     }
 
-    /* HEADER: Presisi Posisi */
     header {
       position: sticky;
       top: 0;
@@ -46,7 +47,6 @@
       padding: 1rem 1.5rem;
       display: grid;
       grid-template-columns: 1fr auto 1fr;
-      /* Logo kiri, Nav Tengah, Spacer Kanan */
       align-items: center;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
@@ -63,7 +63,7 @@
       grid-column: 2;
     }
 
-    /* MODEL TOMBOL GLOW */
+    /* MODEL TOMBOL DENGAN GARIS MERAH METALIK */
     button {
       border-radius: var(--radius);
       text-transform: uppercase;
@@ -82,8 +82,11 @@
       position: relative;
       padding: 0.8rem 1.2rem;
       color: var(--text-dim);
+      overflow: hidden;
+      /* Memastikan garis tidak keluar jalur */
     }
 
+    /* Layer Background Utama */
     button::before {
       content: "";
       position: absolute;
@@ -91,6 +94,25 @@
       background: var(--bg);
       z-index: 1;
       border-radius: calc(var(--radius) - 2px);
+    }
+
+    /* GARIS MERAH METALIK (Outer Border) */
+    button::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      padding: 1px;
+      /* Ketebalan garis merah */
+      border-radius: var(--radius);
+      background: var(--metallic-red);
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0.8;
     }
 
     button span {
@@ -102,13 +124,12 @@
       position: relative;
     }
 
-    /* Efek menyala saat aktif/diklik */
     button:active {
       transform: scale(0.95);
       --size: 400px;
     }
 
-    /* SUBMENU: Tampil di Tengah Halaman (Fullscreen Modal) */
+    /* SUBMENU */
     .sub-menu-overlay {
       position: fixed;
       inset: 0;
@@ -135,7 +156,6 @@
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
 
-    /* Tombol Close */
     .close-btn {
       position: absolute;
       top: 2rem;
@@ -144,6 +164,11 @@
       height: 50px;
       border-radius: 50%;
       padding: 0 !important;
+    }
+
+    /* Penyesuaian garis merah untuk tombol bulat (Close) */
+    .close-btn::after {
+      border-radius: 50%;
     }
 
     @keyframes zoomIn {
@@ -173,17 +198,14 @@
       color: #444;
     }
 
-    /* MOBILE OPTIMIZATION */
     @media (max-width: 768px) {
       header {
         grid-template-columns: auto 1fr;
-        /* Logo kiri, Navigasi sisanya */
         padding: 0.8rem 1rem;
       }
 
       .nav-container {
         justify-self: center;
-        /* Memposisikan grup tombol ke tengah sisa ruang */
         gap: 0.4rem;
         margin-left: auto;
         margin-right: auto;
@@ -264,19 +286,16 @@
         document.body.addEventListener('pointermove', syncPointer);
       },
       setupMenus() {
-        // Buka Submenu
         document.querySelectorAll('button[data-menu]').forEach(btn => {
           btn.addEventListener('click', () => {
             const id = `sub-${btn.dataset.menu}`;
             document.getElementById(id).classList.add('open');
-            document.body.style.overflow = 'hidden'; // Kunci scroll
+            document.body.style.overflow = 'hidden';
           });
         });
-        // Tutup Submenu
         document.querySelectorAll('.close-btn, .sub-menu-overlay button:not(.close-btn)').forEach(btn => {
           btn.addEventListener('click', (e) => {
             if (!e.currentTarget.classList.contains('close-btn')) {
-              // Jika yang diklik adalah item menu, jalankan fungsi navigasi
               console.log("Navigasi Berhasil");
             }
             btn.closest('.sub-menu-overlay').classList.remove('open');
@@ -288,7 +307,6 @@
 
     function nav(target) {
       console.log("Navigasi ke:", target);
-      // Tambahkan logika pindah halaman atau iframe di sini
     }
     app.init();
   </script>
