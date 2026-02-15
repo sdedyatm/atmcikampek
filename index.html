@@ -29,7 +29,7 @@
           transparent) calc((var(--x) * 1px) - (var(--size) * 0.5)) calc((var(--y) * 1px) - (var(--size) * 0.5)) / var(--size) var(--size) no-repeat fixed;
       --text-dim: #888;
       --radius: 1.2rem;
-      /* Efek Merah Metalik dengan Gradasi Bayangan */
+      /* Efek Merah Metalik */
       --metallic-red: linear-gradient(145deg, #ff0000 0%, #8b0000 30%, #ff4d4d 50%, #4b0000 70%, #ff0000 100%);
     }
 
@@ -45,13 +45,15 @@
       background: var(--bg);
       color: white;
       min-height: 100vh;
-      overflow-x: hidden;
+      overflow: hidden;
+      /* Dikunci agar scrolling ditangani area konten */
     }
 
-    /* --- HEADER SECTION --- */
+    /* HEADER */
     header {
-      position: sticky;
+      position: fixed;
       top: 0;
+      width: 100%;
       z-index: 1000;
       background: rgba(10, 10, 10, 0.7);
       backdrop-filter: blur(25px);
@@ -66,7 +68,7 @@
       height: 38px;
       width: auto;
       grid-column: 1;
-      filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.3));
+      cursor: pointer;
     }
 
     .nav-container {
@@ -75,7 +77,7 @@
       grid-column: 2;
     }
 
-    /* --- TOMBOL DENGAN GARIS MERAH METALIK --- */
+    /* TOMBOL DENGAN GARIS MERAH METALIK */
     button {
       border-radius: var(--radius);
       text-transform: uppercase;
@@ -85,20 +87,14 @@
       background: var(--bg);
       border: 2px solid transparent;
       cursor: pointer;
-      /* Background untuk efek Glow Mouse */
-      background:
-        linear-gradient(var(--bg), var(--bg)) padding-box,
-        var(--glow),
-        linear-gradient(black, black) border-box;
+      background: linear-gradient(var(--bg), var(--bg)) padding-box, var(--glow), linear-gradient(black, black) border-box;
       transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      touch-action: manipulation;
       position: relative;
       padding: 0.8rem 1.2rem;
       color: var(--text-dim);
       overflow: hidden;
     }
 
-    /* Lapisan pemisah konten */
     button::before {
       content: "";
       position: absolute;
@@ -108,45 +104,38 @@
       border-radius: calc(var(--radius) - 2px);
     }
 
-    /* GARIS TEPI MERAH METALIK (Struktur Inti) */
     button::after {
       content: "";
       position: absolute;
       inset: 0;
       padding: 1.5px;
-      /* Ketebalan garis metalik */
       border-radius: var(--radius);
       background: var(--metallic-red);
-      -webkit-mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
       z-index: 3;
       pointer-events: none;
-      box-shadow: inset 0 0 5px rgba(255, 0, 0, 0.5);
     }
 
     button span {
       background: var(--glow), white;
-      background-clip: text;
       -webkit-background-clip: text;
+      background-clip: text;
       color: transparent;
       z-index: 2;
       position: relative;
-      filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.2));
     }
 
     button:active {
       transform: scale(0.92);
-      --size: 400px;
     }
 
-    /* --- SUBMENU MODAL --- */
+    /* SUBMENU OVERLAY */
     .sub-menu-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.92);
+      background: rgba(0, 0, 0, 0.95);
       backdrop-filter: blur(20px);
       display: none;
       flex-direction: column;
@@ -154,12 +143,11 @@
       align-items: center;
       gap: 1.2rem;
       z-index: 2000;
-      padding: 2rem;
     }
 
     .sub-menu-overlay.open {
       display: flex;
-      animation: zoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: zoomIn 0.3s ease;
     }
 
     .sub-menu-overlay button {
@@ -176,38 +164,52 @@
       height: 50px;
       border-radius: 50% !important;
       padding: 0 !important;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     .close-btn::after {
       border-radius: 50% !important;
     }
 
-    /* --- HERO --- */
+    /* KONTEN AREA */
+    main {
+      margin-top: 70px;
+      height: calc(100vh - 70px);
+      width: 100%;
+      position: relative;
+    }
+
     .hero {
-      height: 80vh;
+      height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 1rem;
     }
 
     .slogan {
       font-size: clamp(1rem, 5vw, 2rem);
       letter-spacing: 5px;
-      font-weight: 200;
-      color: #555;
+      color: #444;
       margin-bottom: 2rem;
+    }
+
+    #iframe-view {
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
+
+    #content-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
 
     @keyframes zoomIn {
       from {
         opacity: 0;
-        transform: scale(0.8);
+        transform: scale(0.9);
       }
 
       to {
@@ -216,25 +218,18 @@
       }
     }
 
-    /* --- RESPONSIVE --- */
     @media (max-width: 768px) {
       header {
-        grid-template-columns: auto 1fr;
         padding: 0.8rem 1rem;
       }
 
-      .nav-container {
-        justify-self: end;
-        gap: 0.4rem;
+      .header-logo {
+        height: 28px;
       }
 
       button {
         padding: 0.6rem 0.8rem;
         font-size: 0.6rem;
-      }
-
-      .header-logo {
-        height: 26px;
       }
     }
   </style>
@@ -243,8 +238,7 @@
 <body>
 
   <header>
-    <img id="logo-header" src="icon-192.png" class="header-logo" alt="ATM Logo">
-
+    <img id="logo-header" src="icon-192.png" class="header-logo" alt="Logo" onclick="location.reload()">
     <div class="nav-container">
       <button data-menu="explore"><span>Explore</span></button>
       <button data-menu="tools"><span>Tools</span></button>
@@ -252,8 +246,19 @@
     </div>
   </header>
 
+  <main>
+    <section id="hero-view" class="hero">
+      <p class="slogan">MENJELAJAH PENJURU INDONESIA</p>
+      <button id="install-pwa" style="display: none;"><span>Install App</span></button>
+    </section>
+
+    <section id="iframe-view">
+      <iframe id="content-frame" src=""></iframe>
+    </section>
+  </main>
+
   <div id="sub-explore" class="sub-menu-overlay">
-    <button class="close-btn" aria-label="Close"><span>✕</span></button>
+    <button class="close-btn"><span>✕</span></button>
     <button onclick="nav('device')"><span>Device HMSI</span></button>
     <button onclick="nav('layanan')"><span>Layanan</span></button>
     <button onclick="nav('album')"><span>Album</span></button>
@@ -261,22 +266,17 @@
   </div>
 
   <div id="sub-tools" class="sub-menu-overlay">
-    <button class="close-btn" aria-label="Close"><span>✕</span></button>
+    <button class="close-btn"><span>✕</span></button>
     <button onclick="nav('bbm')"><span>BBM</span></button>
     <button onclick="nav('barcode')"><span>Barcode</span></button>
     <button onclick="nav('maps')"><span>Maps</span></button>
   </div>
 
   <div id="sub-stats" class="sub-menu-overlay">
-    <button class="close-btn" aria-label="Close"><span>✕</span></button>
+    <button class="close-btn"><span>✕</span></button>
     <button onclick="nav('total')"><span>Total Armada</span></button>
     <button onclick="nav('wilayah')"><span>Wilayah</span></button>
   </div>
-
-  <section class="hero">
-    <p class="slogan">MENJELAJAH PENJURU INDONESIA</p>
-    <button id="install-pwa" style="display: none; border-radius: 5px;"><span>Pasang Aplikasi</span></button>
-  </section>
 
   <script>
     // Logo Base64
@@ -287,72 +287,68 @@
         this.setupPointer();
         this.setupMenus();
         this.registerSW();
-        this.setupInstallPrompt();
+        this.setupPWA();
       },
       setupPointer() {
-        const syncPointer = ({
-          x: pointerX,
-          y: pointerY
-        }) => {
-          const x = pointerX.toFixed(2);
-          const y = pointerY.toFixed(2);
-          const xp = (pointerX / window.innerWidth).toFixed(2);
-          const yp = (pointerY / window.innerHeight).toFixed(2);
-          document.documentElement.style.setProperty('--x', x);
-          document.documentElement.style.setProperty('--xp', xp);
-          document.documentElement.style.setProperty('--y', y);
-          document.documentElement.style.setProperty('--yp', yp);
-        };
-        document.body.addEventListener('pointermove', syncPointer);
+        window.addEventListener('pointermove', (e) => {
+          document.documentElement.style.setProperty('--x', e.clientX);
+          document.documentElement.style.setProperty('--y', e.clientY);
+          document.documentElement.style.setProperty('--xp', e.clientX / window.innerWidth);
+          document.documentElement.style.setProperty('--yp', e.clientY / window.innerHeight);
+        });
       },
       setupMenus() {
         document.querySelectorAll('button[data-menu]').forEach(btn => {
           btn.addEventListener('click', () => {
-            const id = `sub-${btn.dataset.menu}`;
-            document.getElementById(id).classList.add('open');
-            document.body.style.overflow = 'hidden';
+            document.getElementById(`sub-${btn.dataset.menu}`).classList.add('open');
           });
         });
-        document.querySelectorAll('.close-btn, .sub-menu-overlay button:not(.close-btn)').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            const overlay = btn.closest('.sub-menu-overlay');
-            if (overlay) overlay.classList.remove('open');
-            document.body.style.overflow = 'auto';
+        document.querySelectorAll('.close-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            btn.closest('.sub-menu-overlay').classList.remove('open');
           });
         });
       },
       registerSW() {
         if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-              .then(reg => console.log('SW terdaftar!'))
-              .catch(err => console.error('SW gagal:', err));
-          });
+          navigator.serviceWorker.register('./sw.js').catch(console.error);
         }
       },
-      setupInstallPrompt() {
-        const installBtn = document.getElementById('install-pwa');
+      setupPWA() {
+        const btn = document.getElementById('install-pwa');
         window.addEventListener('beforeinstallprompt', (e) => {
           e.preventDefault();
           this.deferredPrompt = e;
-          installBtn.style.display = 'block';
+          btn.style.display = 'block';
         });
-        installBtn.addEventListener('click', async () => {
+        btn.addEventListener('click', () => {
           if (this.deferredPrompt) {
             this.deferredPrompt.prompt();
-            const {
-              outcome
-            } = await this.deferredPrompt.userChoice;
-            if (outcome === 'accepted') installBtn.style.display = 'none';
             this.deferredPrompt = null;
+            btn.style.display = 'none';
           }
         });
       }
     };
 
     function nav(target) {
-      console.log("Menuju:", target);
-      // Anda bisa menambahkan window.location.href di sini
+      const routes = {
+        'device': 'pages/device.html',
+        'layanan': 'pages/layanan.html',
+        'album': 'pages/album.html',
+        'biodata': 'pages/biodata.html',
+        'bbm': 'https://beritagar.id/harga-bbm', // Contoh link eksternal
+        'barcode': 'pages/barcode.html',
+        'maps': 'https://www.google.com/maps/embed?pb=...', // Gunakan embed link
+        'total': 'pages/total.html',
+        'wilayah': 'pages/wilayah.html'
+      };
+      if (routes[target]) {
+        document.getElementById('hero-view').style.display = 'none';
+        document.getElementById('iframe-view').style.display = 'block';
+        document.getElementById('content-frame').src = routes[target];
+      }
+      document.querySelectorAll('.sub-menu-overlay').forEach(el => el.classList.remove('open'));
     }
     app.init();
   </script>
