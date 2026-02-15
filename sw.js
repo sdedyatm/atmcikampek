@@ -1,7 +1,10 @@
-const CACHE_NAME = 'atm-v3'; // Ubah versi ini setiap kali ada update besar
+const CACHE_NAME = 'atm-v4'; // Ubah versi ini setiap kali ada update besar
 const ASSETS_TO_CACHE = [
   '/',
-  '/index.html',
+  "./index.html",
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png"
   // Jika nanti Anda tambah gambar/logo eksternal atau file lain, tambahkan di sini
 ];
 
