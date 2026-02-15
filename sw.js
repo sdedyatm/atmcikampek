@@ -1,4 +1,4 @@
-const CACHE_NAME = 'atm-v2'; // Ubah versi ini setiap kali ada update besar
+const CACHE_NAME = 'atm-v3'; // Ubah versi ini setiap kali ada update besar
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
