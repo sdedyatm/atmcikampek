@@ -5,6 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>CV AMELIA TRANS MANDIRI</title>
+
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
   <style>
     :root {
       --x: 0;
@@ -20,8 +27,8 @@
           transparent) calc((var(--x) * 1px) - (var(--size) * 0.5)) calc((var(--y) * 1px) - (var(--size) * 0.5)) / var(--size) var(--size) no-repeat fixed;
       --text-dim: #888;
       --radius: 1.2rem;
-      /* Warna Merah Metalik */
-      --metallic-red: linear-gradient(145deg, #ff0000, #8b0000, #ff4d4d, #4b0000);
+      /* Gradien Merah Metalik */
+      --metallic-red: linear-gradient(145deg, #ff0000, #8b0000, #ff4d4d, #330000, #ff0000);
     }
 
     * {
@@ -38,6 +45,7 @@
       overflow-x: hidden;
     }
 
+    /* HEADER */
     header {
       position: sticky;
       top: 0;
@@ -63,7 +71,7 @@
       grid-column: 2;
     }
 
-    /* MODEL TOMBOL DENGAN GARIS MERAH METALIK */
+    /* TOMBOL DENGAN GARIS MERAH METALIK */
     button {
       border-radius: var(--radius);
       text-transform: uppercase;
@@ -83,10 +91,9 @@
       padding: 0.8rem 1.2rem;
       color: var(--text-dim);
       overflow: hidden;
-      /* Memastikan garis tidak keluar jalur */
     }
 
-    /* Layer Background Utama */
+    /* Layer Background Dasar */
     button::before {
       content: "";
       position: absolute;
@@ -96,12 +103,12 @@
       border-radius: calc(var(--radius) - 2px);
     }
 
-    /* GARIS MERAH METALIK (Outer Border) */
+    /* GARIS MERAH METALIK PADA SISI */
     button::after {
       content: "";
       position: absolute;
       inset: 0;
-      padding: 1px;
+      padding: 1.5px;
       /* Ketebalan garis merah */
       border-radius: var(--radius);
       background: var(--metallic-red);
@@ -112,7 +119,6 @@
       mask-composite: exclude;
       z-index: 3;
       pointer-events: none;
-      opacity: 0.8;
     }
 
     button span {
@@ -129,7 +135,7 @@
       --size: 400px;
     }
 
-    /* SUBMENU */
+    /* SUBMENU OVERLAY */
     .sub-menu-overlay {
       position: fixed;
       inset: 0;
@@ -156,19 +162,19 @@
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
 
+    /* Tombol Close Spesifik */
     .close-btn {
       position: absolute;
       top: 2rem;
       right: 2rem;
       width: 50px !important;
       height: 50px;
-      border-radius: 50%;
+      border-radius: 50% !important;
       padding: 0 !important;
     }
 
-    /* Penyesuaian garis merah untuk tombol bulat (Close) */
     .close-btn::after {
-      border-radius: 50%;
+      border-radius: 50% !important;
     }
 
     @keyframes zoomIn {
@@ -198,6 +204,7 @@
       color: #444;
     }
 
+    /* MOBILE OPTIMIZATION */
     @media (max-width: 768px) {
       header {
         grid-template-columns: auto 1fr;
@@ -268,6 +275,7 @@
         document.getElementById('logo-header').src = logoBase64;
         this.setupPointer();
         this.setupMenus();
+        this.registerSW();
       },
       setupPointer() {
         const syncPointer = ({
@@ -296,12 +304,21 @@
         document.querySelectorAll('.close-btn, .sub-menu-overlay button:not(.close-btn)').forEach(btn => {
           btn.addEventListener('click', (e) => {
             if (!e.currentTarget.classList.contains('close-btn')) {
-              console.log("Navigasi Berhasil");
+              // Logika navigasi bisa diletakkan di sini
             }
             btn.closest('.sub-menu-overlay').classList.remove('open');
             document.body.style.overflow = 'auto';
           });
         });
+      },
+      registerSW() {
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+              .then(reg => console.log('PWA: Service Worker Active'))
+              .catch(err => console.log('PWA: Registration Failed', err));
+          });
+        }
       }
     };
 
